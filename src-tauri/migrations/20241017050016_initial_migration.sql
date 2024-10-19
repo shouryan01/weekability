@@ -2,7 +2,7 @@ create table accounts (
   id int primary key generated always as identity,
   name text not null,
   type text not null,
-  balance numeric(10, 2) not null default 0.00,
+  balance int not null default 0,
   opened date not null default current_date
 );
 
@@ -17,5 +17,5 @@ create table transactions (
   category_id int references categories (id),
   description text,
   transaction_date date not null default current_date,
-  amount numeric(10, 2) not null default 0.00
+  amount int not null default 0
 );
