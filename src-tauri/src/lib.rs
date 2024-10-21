@@ -1,13 +1,13 @@
 use sqlx::PgPool;
 use tokio::runtime::Runtime;
 pub mod db {
-    pub mod account;
+    pub mod accounts;
     pub mod schema;
 }
 
 #[tauri::command]
 fn greet(name: &str) -> String {
-    return format!("Hello, {}! You've been greeted from Rust!", name)
+    return format!("Hello, {}! You've been greeted from Rust!", name);
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -23,7 +23,11 @@ pub fn run() {
         .manage(pool)
         .plugin(tauri_plugin_sql::Builder::new().build())
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![greet, db::account::get_all_accounts])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            db::accounts::get_accounts,
+            db::accounts::create_account
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
