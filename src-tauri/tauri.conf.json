@@ -13,8 +13,9 @@
 		"windows": [
 			{
 				"title": "weekability",
-				"width": 1111,
-				"height": 600
+				"width": 1200,
+				"height": 800,
+				"center": true
 			}
 		],
 		"security": {
