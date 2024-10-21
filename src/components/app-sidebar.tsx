@@ -51,6 +51,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
             <SidebarMenuItem>
+            <TooltipProvider>
+              <Tooltip>
+              <TooltipTrigger asChild>
                 <Link href="/">
                     <SidebarMenuButton
                         size="lg"
@@ -64,6 +67,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         </div>
                     </SidebarMenuButton>
                 </Link>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+              weekability
+            </TooltipContent>
+                </Tooltip>
+                </TooltipProvider>
             </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -72,16 +81,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarFooter>
         <TooltipProvider>
+          <div>
           <ThemeToggle />
           {/* Sidebar Toggle */}
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <SidebarTrigger />
             </TooltipTrigger>
             <TooltipContent side="right">
               Resize Sidebar
             </TooltipContent>
           </Tooltip>
+          </div>
         </TooltipProvider>
       </SidebarFooter>
       <SidebarRail />
