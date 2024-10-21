@@ -27,5 +27,3 @@ sqlx = { version = "0.8.2", features = ["time", "rust_decimal", "runtime-tokio-r
 time = { version = "0.3.36", features = ["serde"] }
 rust_decimal = { version = "1.36.0", features = ["serde"] }
 tokio = "1.40.0"
-
-

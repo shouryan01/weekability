@@ -1,3 +1,4 @@
+import type { Account, RustDate } from "@/lib/types";
 import {
     Dialog,
     DialogContent,
@@ -16,29 +17,34 @@ import {
 } from "@/components/ui/table"
 import { useEffect, useState } from 'react';
 
-import { AccountForm } from "@/forms/account-form";
+import { AccountForm } from "@/components/forms/account-form";
 import { CirclePlus } from 'lucide-react';
 import { createFileRoute } from '@tanstack/react-router'
-import { db } from '@/lib/db';
+import { invoke } from '@tauri-apps/api/core';
 
 export const Route = createFileRoute('/accounts')({
   component: Accounts,
 })
 
 function Accounts() {
-    const [accounts, setAccounts] = useState([]);
+    const [accounts, setAccounts] = useState<Account[]>([]);
 
     useEffect(() => {
-        const fetchAccounts = async () => {
+        const fetchAllAccounts = async () => {
             try {
-                const result = await db.select("SELECT * FROM accounts");
-                setAccounts(result);
+                const raw_accounts = await invoke('get_all_accounts') as Account[];
+                const accounts = raw_accounts.map(account => ({
+                    ...account,
+                    opened: new Date(account.opened),
+                }));
+                  
+                setAccounts(accounts);
             } catch (error) {
                 console.error("Error fetching accounts:", error);
             }
         };
 
-        fetchAccounts();
+        fetchAllAccounts();
     }, []);
 
     return (
@@ -70,12 +76,18 @@ function Accounts() {
                             </TableRow>
                         </TableHeader>
                         <TableBody className='text-left'>
-                            {accounts.map((account: { id: number; name: string; account_type: string; opened: string; balance: number }) => (
+                            {accounts.map((account: Account) => (
                                 <TableRow key={account.id} className="mb-2">
                                     <TableCell>{account.name}</TableCell>
                                     <TableCell>{account.account_type}</TableCell>
-                                    <TableCell>{account.opened}</TableCell>
-                                    <TableCell>${account.balance / 100}</TableCell>
+                                    <TableCell>
+                                        {account.opened.toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric',
+                                        })}
+                                    </TableCell>
+                                    <TableCell>${account.balance}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

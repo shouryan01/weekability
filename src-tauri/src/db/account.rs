@@ -1,8 +1,6 @@
+use crate::db::schema::Account;
 use sqlx::{Pool, Postgres};
 use tauri::State;
-
-use crate::schema::Account;
-
 
 #[tauri::command]
 pub async fn get_all_accounts(pool: State<'_, Pool<Postgres>>) -> Result<Vec<Account>, String> {
