@@ -1,4 +1,4 @@
-# Tauri Template
+# weekability
 
 This template should help get you started developing completely local, cross-platform desktop apps.
 
