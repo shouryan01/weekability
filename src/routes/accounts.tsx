@@ -1,4 +1,3 @@
-import { ArrowLeft, CirclePlus } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
@@ -7,7 +6,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { Link, createFileRoute } from '@tanstack/react-router'
 import {
     Table,
     TableBody,
@@ -18,8 +16,9 @@ import {
 } from "@/components/ui/table"
 import { useEffect, useState } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { AccountForm } from "@/forms/account-form";
+import { CirclePlus } from 'lucide-react';
+import { createFileRoute } from '@tanstack/react-router'
 import { db } from '@/lib/db';
 
 export const Route = createFileRoute('/accounts')({
@@ -28,7 +27,6 @@ export const Route = createFileRoute('/accounts')({
 
 function Accounts() {
     const [accounts, setAccounts] = useState([]);
-    const [newAccount, setNewAccount] = useState({ name: '', type: '', balance: 0, opened: new Date() });
 
     useEffect(() => {
         const fetchAccounts = async () => {
@@ -43,121 +41,47 @@ function Accounts() {
         fetchAccounts();
     }, []);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewAccount({ ...newAccount, [name]: value });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await db.execute("INSERT INTO accounts (name, type, balance) VALUES ($1, $2, $3)", [newAccount.name, newAccount.type, Number.parseInt(newAccount.balance*100)]);
-            setAccounts([...accounts, newAccount]);
-            setNewAccount({ name: '', type: '', balance: 0 });
-        } catch (error) {
-            console.error("Error adding account:", error);
-        }
-    };
-
     return (
         <div className="flex justify-center min-h-screen w-screen">
             <div>
-                <span className='flex justify-center text-3xl m-2'>Accounts</span>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Opened</TableHead>
-                        <TableHead>Balance</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody className='text-left'>
-                        {accounts.map((account, index) => (
-                            <TableRow key={account.id} className="mb-2">
-                                <TableCell>{account.name}</TableCell>
-                                <TableCell>{account.type}</TableCell>
-                                <TableCell>{account.opened}</TableCell>
-                                <TableCell>${account.balance/100}</TableCell>
-                                {/* <TableCell className='w-[10px]'>${account.balance}</TableCell> */}
+                <Dialog>
+                    <DialogTrigger><CirclePlus className='h-8 w-8 fixed top-0 right-0 rounded-full m-1 transition duration-100 hover:bg-zinc-300' /> </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Add a new Account</DialogTitle>
+                            <DialogDescription>
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        <AccountForm />
+                    </DialogContent>
+                </Dialog>
+
+                <div className="flex flex-col items-center min-h-screen text-center">
+                    <h1 className="text-3xl mb-8">Accounts</h1>
+
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                            <TableHead>Name</TableHead>
+                            <TableHead>Type</TableHead>
+                            <TableHead>Opened</TableHead>
+                            <TableHead>Balance</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody className='text-left'>
+                            {accounts.map((account: { id: number; name: string; account_type: string; opened: string; balance: number }) => (
+                                <TableRow key={account.id} className="mb-2">
+                                    <TableCell>{account.name}</TableCell>
+                                    <TableCell>{account.account_type}</TableCell>
+                                    <TableCell>{account.opened}</TableCell>
+                                    <TableCell>${account.balance / 100}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
             </div>
         </div>
-        // <div>
-        //     <Dialog>
-        //         <DialogTrigger><CirclePlus className='h-8 w-8 fixed top-0 right-0 rounded-full m-1 transition duration-100 hover:bg-zinc-300' /> </DialogTrigger>
-        //         <DialogContent>
-        //             <DialogHeader>
-        //                 <DialogTitle>Add a new Account</DialogTitle>
-        //                 <DialogDescription>
-        //                 </DialogDescription>
-        //             </DialogHeader>
-
-        //             <form onSubmit={handleSubmit} className="mt-4 flex">
-        //                     <Input
-        //                         type="text"
-        //                         name="name"
-        //                         value={newAccount.name}
-        //                         onChange={handleInputChange}
-        //                         placeholder="Account Name"
-        //                         className="mr-2"
-        //                         required
-        //                     />
-        //                     <Input
-        //                         type="text"
-        //                         name="type"
-        //                         value={newAccount.type}
-        //                         onChange={handleInputChange}
-        //                         placeholder="Account Type"
-        //                         className="mr-2"
-        //                         required
-        //                     />
-        //                     {/* <Input
-        //                         type="date"
-        //                         name='opened'
-        //                         value={newAccount} */}
-        //                     <Input
-        //                         type="number"
-        //                         name="balance"
-        //                         value={newAccount.balance}
-        //                         onChange={handleInputChange}
-        //                         placeholder="Initial Balance"
-        //                         className="mr-2"
-        //                         required
-        //                     />
-        //                     <Button type="submit">Add Account</Button>
-        //                 </form>
-        //         </DialogContent>
-        //     </Dialog>
-
-        //     <div className="flex flex-col items-center min-h-screen text-center">
-        //         <h1 className="text-3xl mb-8">Accounts</h1>
-
-        //         <Table>
-        //             <TableHeader>
-        //                 <TableRow>
-        //                 <TableHead>Name</TableHead>
-        //                 <TableHead>Type</TableHead>
-        //                 <TableHead>Opened</TableHead>
-        //                 <TableHead>Balance</TableHead>
-        //                 </TableRow>
-        //             </TableHeader>
-        //             <TableBody className='text-left'>
-        //                 {accounts.map((account, index) => (
-        //                     <TableRow key={account.id} className="mb-2">
-        //                         <TableCell>{account.name}</TableCell>
-        //                         <TableCell>{account.type}</TableCell>
-        //                         <TableCell>{account.opened}</TableCell>
-        //                         <TableCell>${account.balance/100}</TableCell>
-        //                         {/* <TableCell className='w-[10px]'>${account.balance}</TableCell> */}
-        //                     </TableRow>
-        //                 ))}
-        //             </TableBody>
-        //         </Table>
-        //     </div>
-        // </div>
     );
 }
