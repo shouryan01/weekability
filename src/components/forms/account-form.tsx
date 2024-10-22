@@ -18,6 +18,7 @@ import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { invoke } from "@tauri-apps/api/core"
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -49,11 +50,17 @@ const FormSchema = z.object({
 export function AccountForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      name: "",
+      type: "",
+      opened: new Date(),
+      balance: 0,
+    },
   })
   
   async function onSubmit(account: z.infer<typeof FormSchema>) {
     try {
-        await db.execute("INSERT INTO accounts (name, type, opened, balance) VALUES ($1, $2, $3, $4)", [account.name, account.type, new Date("2024-10-10"), account.balance*100]);
+        await invoke("create_account", { name: account.name, accountType: account.type, balance: account.balance, opened: account.opened.toISOString().split('T')[0] });
     } catch (error) {
         console.error("Error adding account:", error);
     }

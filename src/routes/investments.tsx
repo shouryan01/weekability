@@ -1,6 +1,4 @@
-import { Link, createFileRoute } from '@tanstack/react-router'
-
-import { ArrowLeft } from 'lucide-react'
+import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/investments')({
   component: Investments,

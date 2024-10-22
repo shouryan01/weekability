@@ -1,5 +1,5 @@
 export type Account = {
-  id?: number;
+  id: number;
   name: string;
   account_type: string;
   opened: Date;
