@@ -1,4 +1,3 @@
-import type { Account } from "@/lib/types";
 import {
 	Dialog,
 	DialogContent,
@@ -15,11 +14,12 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { CirclePlus, Pencil, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { AccountForm } from "@/components/forms/account-form";
 import { Button } from "@/components/ui/button";
-import { CirclePlus, Pencil, Trash } from "lucide-react";
+import type { Account } from "@/lib/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
 
@@ -33,20 +33,6 @@ function Accounts() {
 	useEffect(() => {
 		getAccounts();
 	}, []);
-
-	// const createAccount = async () => {
-	// 	const account: Account = {
-	// 		name: "New Account",
-	// 		account_type: "checking",
-	// 		balance: 0.1,
-	// 		opened: new Date(),
-	// 	};
-	// 	try {
-	// 		await invoke("create_account", { name: "test", accountType: account.account_type, balance: account.balance, opened: new Date().toISOString().split('T')[0] });
-	// 	} catch (error) {
-	// 		console.error("Error adding account:", error);
-	// 	}
-	// };
 
 	const getAccounts = async () => {
 		try {
@@ -69,7 +55,7 @@ function Accounts() {
 		} catch (error) {
 			console.error("Error deleting account:", error);
 		}
-	}
+	};
 
 	function updateAccount(id: number): void {
 		console.log(id);
@@ -87,15 +73,12 @@ function Accounts() {
 							<DialogTitle>Add a new Account</DialogTitle>
 							<DialogDescription>test</DialogDescription>
 						</DialogHeader>
-
 						<AccountForm />
 					</DialogContent>
 				</Dialog>
 
 				<div className="flex flex-col items-center min-h-screen text-center">
 					<h1 className="text-3xl mb-8">Accounts</h1>
-
-					{/* <Button onClick={() => createAccount()}>Add</Button> */}
 
 					<Table>
 						<TableHeader>
@@ -121,8 +104,20 @@ function Accounts() {
 									</TableCell>
 									<TableCell>${account.balance}</TableCell>
 									<TableCell className="flex gap-2">
-										<Button size="icon" variant="outline" onClick={() => updateAccount(account.id)}><Pencil className="h-4 w-4" /></Button>
-										<Button size="icon" variant="destructive" onClick={() => deleteAccount(account.id)}><Trash className="h-4 w-4" /></Button>
+										<Button
+											size="icon"
+											variant="outline"
+											onClick={() => updateAccount(account.id)}
+										>
+											<Pencil className="h-4 w-4" />
+										</Button>
+										<Button
+											size="icon"
+											variant="destructive"
+											onClick={() => deleteAccount(account.id)}
+										>
+											<Trash className="h-4 w-4" />
+										</Button>
 									</TableCell>
 								</TableRow>
 							))}

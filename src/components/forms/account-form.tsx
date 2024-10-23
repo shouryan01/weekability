@@ -12,13 +12,12 @@ import { Calendar } from "@/components/ui/calendar"
 import { CalendarIcon } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-import { db } from "@/lib/db"
 import { format } from "date-fns"
+import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { invoke } from "@tauri-apps/api/core"
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -35,17 +34,6 @@ const FormSchema = z.object({
     message: "Account Balance must be minimum $0.00."
   })
 })
-
-// const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//         await db.execute("INSERT INTO accounts (name, type, balance) VALUES ($1, $2, $3)", [newAccount.name, newAccount.type, Number.parseInt(newAccount.balance*100)]);
-//         setAccounts([...accounts, newAccount]);
-//         setNewAccount({ name: '', type: '', balance: 0 });
-//     } catch (error) {
-//         console.error("Error adding account:", error);
-//     }
-// };
 
 export function AccountForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
