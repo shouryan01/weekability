@@ -7,7 +7,6 @@
 		"amatiasq.sort-imports",
 		"formulahendry.auto-rename-tag",
 		"vincaslt.highlight-matching-tag",
-		"yoavbls.pretty-ts-errors",
-		"mhutchie.git-graph"
+		"yoavbls.pretty-ts-errors"
 	]
 }

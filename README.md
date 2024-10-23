@@ -57,4 +57,4 @@ Of course, since this is open-source, feel free to fork and add a [Plaid](https:
 - [Tanstack Router](https://tanstack.com/router/latest)
 - [Tailwindcss](https://tailwindcss.com)
 - [shadcn/ui](https://ui.shadcn.com)
-- [Biomejs](https://biomejs.dev)
+- [Biomejs](https://biomejs.dev) - `bunx biome check --write .`
