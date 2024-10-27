@@ -1,3 +1,5 @@
+import { CalendarIcon, CirclePlus } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 import {
   Form,
   FormControl,
@@ -9,13 +11,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
+import { useState } from "react"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 
@@ -35,7 +37,7 @@ const FormSchema = z.object({
   })
 })
 
-export function AccountForm() {
+export function AccountForm({ getAccounts, setOpen }: { getAccounts: () => Promise<void>, setOpen: (open: boolean) => void }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -53,6 +55,8 @@ export function AccountForm() {
         console.error("Error adding account:", error);
     }
     toast.success('Account has been created!')
+    getAccounts();
+    setOpen(false);
   }
 
   return (
@@ -138,5 +142,25 @@ export function AccountForm() {
         </div>
       </form>
     </Form>
+  )
+}
+
+export function AccountFormDialog({ getAccounts }: { getAccounts: () => Promise<void> }) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger>
+      <Button variant="outline" size="icon" className="h-8 w-8 fixed top-0 right-0 transition duration-100 m-1">
+        <CirclePlus className="h-6 w-6" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Add a new Account</DialogTitle>
+        </DialogHeader>
+        <AccountForm getAccounts={getAccounts} setOpen={setOpen} />
+      </DialogContent>
+    </Dialog>
   )
 }

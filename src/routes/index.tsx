@@ -1,5 +1,6 @@
 import "../App.css";
 
+import { ChartComponent } from "@/components/chart-test";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -7,7 +8,11 @@ export const Route = createFileRoute("/")({
 });
 
 function App() {
-	return <div className="flex justify-center w-screen">Net Worth</div>;
+	return (
+		<div className="flex justify-center w-screen">
+			<ChartComponent />
+		</div>
+	)
 }
 
 export default App;

@@ -25,6 +25,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             db::accounts::get_accounts,
             db::accounts::create_account,
+            db::accounts::update_account,
             db::accounts::delete_account
         ])
         .run(tauri::generate_context!())

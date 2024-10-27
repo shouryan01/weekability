@@ -1,12 +1,4 @@
 import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
-import {
 	Table,
 	TableBody,
 	TableCell,
@@ -14,14 +6,16 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { CirclePlus, Pencil, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { AccountForm } from "@/components/forms/account-form";
-import { Button } from "@/components/ui/button";
 import type { Account } from "@/lib/types";
+import { AccountFormDialog } from "@/components/forms/account-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Trash } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/accounts")({
 	component: Accounts,
@@ -34,7 +28,7 @@ function Accounts() {
 		getAccounts();
 	}, []);
 
-	const getAccounts = async () => {
+	const getAccounts = async (): Promise<void> => {
 		try {
 			const raw_accounts = (await invoke("get_accounts")) as Account[];
 			const accounts = raw_accounts.map((account) => ({
@@ -55,27 +49,23 @@ function Accounts() {
 		} catch (error) {
 			console.error("Error deleting account:", error);
 		}
+		toast.error('Account has been deleted.')
 	};
 
-	function updateAccount(id: number): void {
-		console.log(id);
+	const updateAccount = async (id: number, balance: number): Promise<void> => {
+		try {
+			await invoke("update_account", { id, balance });
+			toast.success('Account has been updated!')
+			getAccounts();
+		} catch (error) {
+			console.error("Error updating account:", error);
+		}
 	}
 
 	return (
 		<div className="flex justify-center min-h-screen w-screen">
 			<div>
-				<Dialog>
-					<DialogTrigger>
-						<CirclePlus className="h-8 w-8 fixed top-0 right-0 rounded-full m-1 transition duration-100 hover:bg-zinc-300" />{" "}
-					</DialogTrigger>
-					<DialogContent>
-						<DialogHeader>
-							<DialogTitle>Add a new Account</DialogTitle>
-							<DialogDescription>test</DialogDescription>
-						</DialogHeader>
-						<AccountForm />
-					</DialogContent>
-				</Dialog>
+				<AccountFormDialog getAccounts={getAccounts} />
 
 				<div className="flex flex-col items-center min-h-screen text-center">
 					<h1 className="text-3xl mb-8">Accounts</h1>
@@ -87,7 +77,7 @@ function Accounts() {
 								<TableHead>Type</TableHead>
 								<TableHead>Opened</TableHead>
 								<TableHead>Balance</TableHead>
-								<TableHead>Actions</TableHead>
+								<TableHead>Delete</TableHead>
 							</TableRow>
 						</TableHeader>
 						<TableBody className="text-left">
@@ -102,15 +92,14 @@ function Accounts() {
 											day: "numeric",
 										})}
 									</TableCell>
-									<TableCell>${account.balance}</TableCell>
+									<TableCell>
+										<Input
+											type="number"
+											defaultValue={account.balance}
+											onBlur={(e) => updateAccount(account.id, Number.parseFloat(e.target.value))}
+										/>
+									</TableCell>
 									<TableCell className="flex gap-2">
-										<Button
-											size="icon"
-											variant="outline"
-											onClick={() => updateAccount(account.id)}
-										>
-											<Pencil className="h-4 w-4" />
-										</Button>
 										<Button
 											size="icon"
 											variant="destructive"

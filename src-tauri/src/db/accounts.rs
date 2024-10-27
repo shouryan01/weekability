@@ -42,6 +42,29 @@ pub async fn get_accounts(pool: State<'_, Pool<Postgres>>) -> Result<Vec<Account
     Ok(rows)
 }
 
+// Update only needed for Account Balance
+#[tauri::command]
+pub async fn update_account(
+    pool: State<'_, Pool<Postgres>>,
+    id: i32,
+    balance: Decimal,
+) -> Result<String, String> {
+    let result = sqlx::query!(
+        "UPDATE accounts SET balance = $1 WHERE id = $2",
+        balance,
+        id
+    )
+    .execute(pool.inner())
+    .await
+    .map_err(|err| err.to_string())?;
+
+    if result.rows_affected() == 1 {
+        Ok("Account successfully updated".to_string())
+    } else {
+        Err("Failed to update account".to_string())
+    }
+}
+
 #[tauri::command]
 pub async fn delete_account(pool: State<'_, Pool<Postgres>>, id: i32) -> Result<String, String> {
     sqlx::query!("DELETE FROM accounts WHERE id = $1", id)
