@@ -1,3 +1,4 @@
+import { ChartPie, ChartSpline, Coins, Landmark, Rows4, Settings } from "lucide-react";
 import {
 	Sidebar,
 	SidebarContent,
@@ -9,7 +10,6 @@ import {
 	SidebarRail,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { ChartPie, ChartSpline, Coins, Landmark, Rows4 } from "lucide-react";
 import {
 	Tooltip,
 	TooltipContent,
@@ -17,8 +17,9 @@ import {
 	TooltipTrigger,
 } from "./ui/tooltip";
 
-import { NavMain } from "@/components/nav-main";
+import { Button } from "./ui/button";
 import { Link } from "@tanstack/react-router";
+import { NavMain } from "@/components/nav-main";
 import { ThemeToggle } from "./theme-toggle";
 
 const data = [
@@ -82,6 +83,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				<TooltipProvider>
 					<div>
 						<ThemeToggle />
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<Link href="/settings">
+									<Button
+										variant="outline"
+										size="icon"
+										className="h-8 w-8"
+									>
+										<Settings className="h-[1.2rem] w-[1.2rem] hover:rotate-45 transition-all duration-200" />
+									</Button>
+								</Link>
+							</TooltipTrigger>
+							<TooltipContent side="right">Settings</TooltipContent>
+						</Tooltip>
 						<Tooltip>
 							<TooltipTrigger asChild>
 								<SidebarTrigger />

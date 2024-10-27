@@ -151,8 +151,8 @@ export function AccountFormDialog({ getAccounts }: { getAccounts: () => Promise<
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-      <Button variant="outline" size="icon" className="h-8 w-8 fixed top-0 right-0 transition duration-100 m-1">
-        <CirclePlus className="h-6 w-6" />
+        <Button variant="outline" size="icon" className="h-10 w-10 fixed bottom-0 right-0 transition duration-100 m-4">
+          <CirclePlus className="h-8 w-8" />
         </Button>
       </DialogTrigger>
       <DialogContent>

@@ -65,9 +65,7 @@ function Accounts() {
 	return (
 		<div className="flex justify-center min-h-screen w-screen">
 			<div>
-				<AccountFormDialog getAccounts={getAccounts} />
-
-				<div className="flex flex-col items-center min-h-screen text-center">
+				<div className="flex flex-col items-center min-h-screen text-center mt-5">
 					<h1 className="text-3xl mb-8">Accounts</h1>
 
 					<Table>
@@ -113,6 +111,7 @@ function Accounts() {
 						</TableBody>
 					</Table>
 				</div>
+				<AccountFormDialog getAccounts={getAccounts} />
 			</div>
 		</div>
 	);

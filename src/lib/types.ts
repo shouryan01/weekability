@@ -5,3 +5,8 @@ export type Account = {
   opened: Date;
   balance: number;
 }
+
+export type Category = {
+  id: number,
+  name: string
+}

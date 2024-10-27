@@ -280,7 +280,7 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <UnfoldHorizontal />
+      <UnfoldHorizontal className="h-[1.2rem] w-[1.2rem] hover:scale-125 transition-all duration-150" />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )

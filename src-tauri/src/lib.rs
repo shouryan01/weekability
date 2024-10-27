@@ -3,6 +3,8 @@ use std::env;
 use tokio::runtime::Runtime;
 pub mod db {
     pub mod accounts;
+    pub mod categories;
+    
     pub mod schema;
 }
 
@@ -26,7 +28,10 @@ pub fn run() {
             db::accounts::get_accounts,
             db::accounts::create_account,
             db::accounts::update_account,
-            db::accounts::delete_account
+            db::accounts::delete_account,
+            db::categories::get_categories,
+            db::categories::create_category,
+            db::categories::delete_category,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -24,3 +24,9 @@ where
 
     serializer.serialize_str(&formatted)
 }
+
+#[derive(Debug, FromRow, Serialize, Deserialize)]
+pub struct Category {
+    pub id: i32,
+    pub name: String,
+}
