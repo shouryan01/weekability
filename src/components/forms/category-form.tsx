@@ -1,4 +1,3 @@
-import { CirclePlus } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 import {
     Form,
@@ -7,7 +6,9 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form"
+
 import { Button } from "@/components/ui/button"
+import { CirclePlus } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
@@ -50,7 +51,7 @@ export function CategoryForm({ getCategories, setOpen }: { getCategories: () => 
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Input placeholder="Account Name" {...field} />
+                                <Input placeholder="Category Name" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -76,7 +77,7 @@ export function CategoryFormDialog({ getCategories }: { getCategories: () => Pro
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Add a new Account</DialogTitle>
+                    <DialogTitle>Add a new Category</DialogTitle>
                 </DialogHeader>
                 <CategoryForm getCategories={getCategories} setOpen={setOpen} />
             </DialogContent>

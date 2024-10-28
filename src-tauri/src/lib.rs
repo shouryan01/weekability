@@ -4,6 +4,7 @@ use tokio::runtime::Runtime;
 pub mod db {
     pub mod accounts;
     pub mod categories;
+    pub mod transactions;
     
     pub mod schema;
 }
@@ -29,9 +30,14 @@ pub fn run() {
             db::accounts::create_account,
             db::accounts::update_account,
             db::accounts::delete_account,
+
             db::categories::get_categories,
             db::categories::create_category,
             db::categories::delete_category,
+            
+            db::transactions::get_transactions,
+            db::transactions::create_transaction,
+            db::transactions::delete_transaction,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

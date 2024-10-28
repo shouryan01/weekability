@@ -33,11 +33,11 @@ const data = [
 		url: "/transactions",
 		icon: Rows4,
 	},
-	{
-		title: "Investments",
-		url: "/investments",
-		icon: ChartSpline,
-	},
+	// {
+	// 	title: "Investments",
+	// 	url: "/investments",
+	// 	icon: ChartSpline,
+	// },
 	{
 		title: "Accounts",
 		url: "/accounts",
