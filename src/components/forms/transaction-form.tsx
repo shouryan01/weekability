@@ -1,5 +1,6 @@
+import type { Account, Category, TransactionFormLabel } from "@/lib/types"
 import { CalendarIcon, CirclePlus } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import {
     Form,
     FormControl,
@@ -8,6 +9,8 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { useEffect, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -17,7 +20,6 @@ import { format } from "date-fns"
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
-import { useState } from "react"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 
@@ -25,8 +27,8 @@ const FormSchema = z.object({
     description: z.string().min(2, {
         message: "Transaction description must be at least 2 characters.",
     }),
-    account_id: z.coerce.number(),
-    category_id: z.coerce.number(),
+    account_id: z.string(),
+    category_id: z.string(),
     transaction_date: z.coerce.date({ required_error: "Transaction date is required.", }),
     amount: z.coerce.number({
         required_error: "Transaction balance is required",
@@ -37,12 +39,37 @@ const FormSchema = z.object({
 })
 
 export function TransactionForm({ getCategories, setOpen }: { getCategories: () => Promise<void>, setOpen: (open: boolean) => void }) {
+    const [accountNames, setAccountNames] = useState<TransactionFormLabel[]>([]);
+	const [categoryNames, setCategoryNames] = useState<TransactionFormLabel[]>([]);
+
+    useEffect(() => {
+		getAccountNames();
+		getCategoryNames();
+	}, []);
+
+    const getAccountNames = async (): Promise<void> => {
+		try {
+			const raw_account_names = (await invoke("get_accounts")) as Account[];
+			const account_names = raw_account_names.map(({ id, name, account_type }) => ({ id, name: `${name} - ${account_type}` }));
+			setAccountNames(account_names);
+		} catch (error) {
+			console.error("Error fetching accounts:", error);
+		}
+	}
+
+	const getCategoryNames = async (): Promise<void> => {
+		try {
+			const raw_categories = (await invoke("get_categories")) as Category[];
+			setCategoryNames(raw_categories);
+		} catch (error) {
+			console.error("Error fetching accounts:", error);
+		}
+	}
+    
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
             description: "",
-            account_id: 1,
-            category_id: 1,
             transaction_date: new Date(),
             amount: 0
         },
@@ -50,7 +77,7 @@ export function TransactionForm({ getCategories, setOpen }: { getCategories: () 
 
     async function onSubmit(transaction: z.infer<typeof FormSchema>) {
         try {
-            await invoke("create_transaction", { description: transaction.description, accountId: transaction.account_id, categoryId: transaction.category_id, transactionDate: transaction.transaction_date.toISOString().split('T')[0], amount: transaction.amount });
+            await invoke("create_transaction", { description: transaction.description, accountId: Number.parseInt(transaction.account_id), categoryId: Number.parseInt(transaction.category_id), transactionDate: transaction.transaction_date.toISOString().split('T')[0], amount: transaction.amount });
             toast.success('Transaction has been created!')
             getCategories();
         } catch (error) {
@@ -79,9 +106,18 @@ export function TransactionForm({ getCategories, setOpen }: { getCategories: () 
                     name="account_id"
                     render={({ field }) => (
                         <FormItem>
-                            <FormControl>
-                                <Input placeholder="Account ID" type="number" {...field} />
-                            </FormControl>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select an account." />
+                                </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {accountNames.map((account) => 
+                                        <SelectItem key={account.id} value={account.id.toString()}>{account.name}</SelectItem>
+                                    )}
+                                </SelectContent>
+                            </Select>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -91,9 +127,21 @@ export function TransactionForm({ getCategories, setOpen }: { getCategories: () 
                     name="category_id"
                     render={({ field }) => (
                         <FormItem>
-                            <FormControl>
+                            {/* <FormControl>
                                 <Input placeholder="Category ID" type="number" {...field} />
-                            </FormControl>
+                            </FormControl> */}
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select a category." />
+                                </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {categoryNames.map((category) => 
+                                        <SelectItem key={category.id} value={category.id.toString()}>{category.name}</SelectItem>
+                                    )}
+                                </SelectContent>
+                            </Select>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -103,37 +151,37 @@ export function TransactionForm({ getCategories, setOpen }: { getCategories: () 
                     name="transaction_date"
                     render={({ field }) => (
                     <FormItem className="flex flex-col">
-                    <Popover>
-                        <PopoverTrigger asChild>
-                        <FormControl>
-                            <Button
-                                variant={"outline"}
-                                className={cn(
-                                    "pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                )}
-                            >
-                                {field.value ? (
-                                    format(field.value, "PPP")
-                                ) : (
-                                    <span>Account Opened Date</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                        </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) =>
-                            date > new Date() || date < new Date("2019-01-01")
-                            }
-                            initialFocus
-                        />
-                        </PopoverContent>
-                    </Popover>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                            <FormControl>
+                                <Button
+                                    variant={"outline"}
+                                    className={cn(
+                                        "pl-3 text-left font-normal",
+                                        !field.value && "text-muted-foreground"
+                                    )}
+                                >
+                                    {field.value ? (
+                                        format(field.value, "PPP")
+                                    ) : (
+                                        <span>Account Opened Date</span>
+                                    )}
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                            </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                disabled={(date) =>
+                                date > new Date() || date < new Date("2019-01-01")
+                                }
+                                initialFocus
+                            />
+                            </PopoverContent>
+                        </Popover>
                     </FormItem>
                 )}
                 />
@@ -159,7 +207,6 @@ export function TransactionForm({ getCategories, setOpen }: { getCategories: () 
 
 export function TransactionFormDialog({ getTransactions }: { getTransactions: () => Promise<void> }) {
     const [open, setOpen] = useState(false)
-
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger>
@@ -171,6 +218,7 @@ export function TransactionFormDialog({ getTransactions }: { getTransactions: ()
                 <DialogHeader>
                     <DialogTitle>Add a new Transaction</DialogTitle>
                 </DialogHeader>
+                <DialogDescription className="">All fields are required.</DialogDescription>
                 <TransactionForm getCategories={getTransactions} setOpen={setOpen} />
             </DialogContent>
         </Dialog>

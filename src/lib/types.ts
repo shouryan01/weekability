@@ -19,3 +19,8 @@ export type Transaction = {
   transaction_date: Date,
   amount: number
 }
+
+export type TransactionFormLabel = {
+  id: number,
+  name: string
+}

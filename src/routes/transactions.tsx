@@ -1,10 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
-import type {Transaction} from "@/lib/types.ts";
-import {Button} from "@/components/ui/button.tsx";
-import {Trash} from "lucide-react";
 import {useEffect, useState} from "react";
+
+import {Button} from "@/components/ui/button.tsx";
+import type {Transaction} from "@/lib/types.ts";
 import {TransactionFormDialog} from "@/components/forms/transaction-form.tsx";
+import {Trash} from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
 import {invoke} from "@tauri-apps/api/core";
 import {toast} from "sonner";
 
