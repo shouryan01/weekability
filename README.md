@@ -34,12 +34,6 @@ Of course, since this is open-source, feel free to fork and add a [Plaid](https:
 
 # Development
 
-## Database Setup
-
-1. Set `DATABASE_URL` for a Postgres database in `src-tauri/.env`:
-2. `sqlx database create` creates your new database. Run in `src-tauri/`
-3. `sqlx migrate run` applies migrations
-
 ## Starting the app
 
 1. `bun i`
@@ -49,7 +43,7 @@ Of course, since this is open-source, feel free to fork and add a [Plaid](https:
 
 ### Backend
 - [Tauri](http://tauri.app/)
-- [Postgres](https://www.postgresql.org) with [sqlx](https://github.com/launchbadge/sqlx)
+- [SQLite](https://www.sqlite.org/) with [sqlx](https://github.com/launchbadge/sqlx)
 
 ### Frontend
 - [React](http://react.dev/)
