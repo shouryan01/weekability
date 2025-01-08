@@ -4881,6 +4881,7 @@ dependencies = [
 name = "weekability"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "dotenv",
  "rust_decimal",
  "serde",

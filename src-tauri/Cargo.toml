@@ -28,3 +28,4 @@ time = { version = "0.3.36", features = ["serde"] }
 rust_decimal = { version = "1.36.0", features = ["serde"] }
 tokio = "1.40.0"
 dotenv = "0.15.0"
+anyhow = "1.0.91"
