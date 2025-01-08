@@ -33,7 +33,6 @@ That is a tradeoff I believe is necessary if you're serious about controlling yo
 Of course, since this is open-source, feel free to fork and add a [Plaid](https://plaid.com/) integration to do this automatically. I will add instructions on how to do this soon.
 
 # Development
-
 ## Starting the app
 
 1. `bun i`
