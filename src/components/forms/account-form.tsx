@@ -55,7 +55,7 @@ export function AccountForm({ getAccounts, setOpen }: { getAccounts: () => Promi
         console.error("Error adding account:", error);
     }
     toast.success('Account has been created!')
-    getAccounts();
+    await getAccounts();
     setOpen(false);
   }
 

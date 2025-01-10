@@ -17,7 +17,7 @@ impl Database {
         // Ensure the app directory exists
         fs::create_dir_all(&app_dir)?;
 
-        let db_path = app_dir.join("tauri-template.db");
+        let db_path = app_dir.join("weekability.db");
 
         // Set the DATABASE_URL environment variable to point to this SQLite file
         env::set_var("DATABASE_URL", format!("sqlite://{}", db_path.display()));

@@ -38,7 +38,7 @@ export function CategoryForm({ getCategories, setOpen }: { getCategories: () => 
             console.error("Error adding category:", error);
         }
         toast.success('Category has been created!')
-        getCategories();
+        await getCategories();
         setOpen(false);
     }
 

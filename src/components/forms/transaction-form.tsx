@@ -79,7 +79,7 @@ export function TransactionForm({ getCategories, setOpen }: { getCategories: () 
         try {
             await invoke("create_transaction", { description: transaction.description, accountId: Number.parseInt(transaction.account_id), categoryId: Number.parseInt(transaction.category_id), transactionDate: transaction.transaction_date.toISOString().split('T')[0], amount: transaction.amount });
             toast.success('Transaction has been created!')
-            getCategories();
+            await getCategories();
         } catch (error) {
             console.error("Error adding transaction:", error);
         }
