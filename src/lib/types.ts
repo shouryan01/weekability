@@ -2,7 +2,7 @@ export type Account = {
   id: number,
   name: string,
   account_type: string,
-  opened: Date,
+  opened: string,
   balance: number,
 }
 
@@ -16,7 +16,7 @@ export type Transaction = {
   account_id: number,
   category_id: number,
   description: string,
-  transaction_date: Date,
+  transaction_date: string,
   amount: number
 }
 

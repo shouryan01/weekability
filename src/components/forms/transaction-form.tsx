@@ -77,7 +77,7 @@ export function TransactionForm({ getCategories, setOpen }: { getCategories: () 
 
     async function onSubmit(transaction: z.infer<typeof FormSchema>) {
         try {
-            await invoke("create_transaction", { description: transaction.description, accountId: Number.parseInt(transaction.account_id), categoryId: Number.parseInt(transaction.category_id), transactionDate: transaction.transaction_date.toISOString().split('T')[0], amount: transaction.amount });
+            await invoke("create_transaction", { description: transaction.description, accountId: Number.parseInt(transaction.account_id), categoryId: Number.parseInt(transaction.category_id), transactionDate: transaction.transaction_date.toISOString().split('T')[0], amount: transaction.amount * 100 });
             toast.success('Transaction has been created!')
             await getCategories();
         } catch (error) {
@@ -191,7 +191,7 @@ export function TransactionForm({ getCategories, setOpen }: { getCategories: () 
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Input placeholder="Amount $" type="number" {...field} />
+                                <Input placeholder="Amount $" type="number" step="0.01" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

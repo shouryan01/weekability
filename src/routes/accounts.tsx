@@ -30,12 +30,7 @@ function Accounts() {
 
 	const getAccounts = async (): Promise<void> => {
 		try {
-			const raw_accounts = (await invoke("get_accounts")) as Account[];
-			const accounts = raw_accounts.map((account) => ({
-				...account,
-				opened: new Date(account.opened),
-			}));
-
+			const accounts = (await invoke("get_accounts")) as Account[];
 			setAccounts(accounts);
 		} catch (error) {
 			console.error("Error fetching accounts:", error);
@@ -83,18 +78,23 @@ function Accounts() {
 								<TableRow key={account.id} className="mb-2">
 									<TableCell>{account.name}</TableCell>
 									<TableCell>{account.account_type}</TableCell>
-									<TableCell>
-										{account.opened.toLocaleDateString("en-US", {
-											year: "numeric",
-											month: "short",
-											day: "numeric",
-										})}
-									</TableCell>
+									<TableCell>{account.opened}</TableCell>
 									<TableCell>
 										<Input
 											type="number"
-											defaultValue={account.balance}
-											onBlur={(e) => updateAccount(account.id, Number.parseFloat(e.target.value))}
+											step="0.01"
+											defaultValue={(account.balance / 100).toFixed(2)}
+											onChange={(e) => {
+												const value = e.target.value;
+												if (value.includes('.') && value.split('.')[1].length > 2) {
+													e.target.value = Number(value).toFixed(2);
+												}
+											}}
+											onBlur={(e) => {
+												const dollarValue = Number.parseFloat(e.target.value);
+												const centsValue = Math.round(dollarValue * 100);
+												updateAccount(account.id, centsValue);
+											}}
 										/>
 									</TableCell>
 									<TableCell className="flex gap-2">

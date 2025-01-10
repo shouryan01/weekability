@@ -50,7 +50,7 @@ export function AccountForm({ getAccounts, setOpen }: { getAccounts: () => Promi
   
   async function onSubmit(account: z.infer<typeof FormSchema>) {
     try {
-        await invoke("create_account", { name: account.name, accountType: account.type, balance: account.balance, opened: account.opened.toISOString().split('T')[0] });
+        await invoke("create_account", { name: account.name, accountType: account.type, balance: account.balance * 100, opened: account.opened.toISOString().split('T')[0] });
     } catch (error) {
         console.error("Error adding account:", error);
     }
@@ -131,7 +131,7 @@ export function AccountForm({ getAccounts, setOpen }: { getAccounts: () => Promi
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Account Balance $" type="number" {...field} />
+                <Input placeholder="Account Balance $" type="number" step="0.01" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

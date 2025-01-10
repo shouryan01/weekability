@@ -22,11 +22,7 @@ function Transactions() {
 
 	const getTransactions = async (): Promise<void> => {
 		try {
-			const raw_transactions = (await invoke("get_transactions")) as Transaction[];
-			const transactions = raw_transactions.map((transaction) => ({
-				...transaction,
-				transaction_date: new Date(transaction.transaction_date),
-			}));
+			const transactions = (await invoke("get_transactions")) as Transaction[];
 
 			setTransactions(transactions);
 		} catch (error) {
@@ -66,14 +62,8 @@ function Transactions() {
 									<TableCell>{transaction.description}</TableCell>
 									<TableCell>{transaction.category_id}</TableCell>
 									<TableCell>{transaction.account_id}</TableCell>
-									<TableCell>
-										{transaction.transaction_date.toLocaleDateString("en-US", {
-											year: "numeric",
-											month: "short",
-											day: "numeric",
-										})}
-									</TableCell>
-									<TableCell>{transaction.amount}</TableCell>
+									<TableCell>{transaction.transaction_date}</TableCell>
+									<TableCell>{transaction.amount / 100}</TableCell>
 									<TableCell className="flex gap-2">
 										<Button
 											size="icon"
