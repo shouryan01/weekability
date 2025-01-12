@@ -33,6 +33,18 @@ That is a tradeoff I believe is necessary if you're serious about controlling yo
 Of course, since this is open-source, feel free to fork and add a [Plaid](https://plaid.com/) integration to do this automatically. I will add instructions on how to do this soon.
 
 # Development
+
+## Set database path
+The SQLite database will be stored in your system’s application data directory:
+
+    Windows: C:\Users\<Username>\AppData\Roaming\com.weekability.app
+
+    macOS: ~/Library/Application Support/com.weekability.app
+
+    Linux: ~/.local/share/com.weekability.app
+
+Set `DATABASE_URL` to one of the above depending on your system. 
+
 ## Starting the app
 
 1. `bun i`
