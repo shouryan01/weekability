@@ -40,6 +40,36 @@ pub async fn get_transactions(pool: State<'_, Pool<Sqlite>>) -> Result<Vec<Trans
 }
 
 #[tauri::command]
+pub async fn update_transaction(
+    pool: State<'_, Pool<Sqlite>>,
+    id: i64,
+    account_id: i64,
+    category_id: i64,
+    description: String,
+    transaction_date: String,
+    amount: i64
+) -> Result<String, String> {
+    let result = sqlx::query!(
+        "UPDATE transactions SET account_id = $2, category_id = $3, description = $4, transaction_date = $5, amount = $6 WHERE id = $1",
+        id,
+        account_id,
+        category_id,
+        description,
+        transaction_date,
+        amount
+    )
+    .execute(pool.inner())
+    .await
+    .map_err(|err| err.to_string())?;
+
+    if result.rows_affected() == 1 {
+        Ok("Account successfully updated".to_string())
+    } else {
+        Err("Failed to update account".to_string())
+    }
+}
+
+#[tauri::command]
 pub async fn delete_transaction(pool: State<'_, Pool<Sqlite>>, id: i64) -> Result<String, String> {
     sqlx::query!("DELETE FROM transactions WHERE id = $1", id)
         .execute(pool.inner())

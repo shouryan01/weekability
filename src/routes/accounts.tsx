@@ -12,10 +12,13 @@ import type { Account } from "@/lib/types";
 import { AccountFormDialog } from "@/components/forms/account-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Trash } from "lucide-react";
+import {CalendarIcon, Trash} from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
 import { toast } from "sonner";
+import {Calendar} from "@/components/ui/calendar.tsx";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
+import {format} from "date-fns";
 
 export const Route = createFileRoute("/accounts")({
 	component: Accounts,
@@ -37,6 +40,16 @@ function Accounts() {
 		}
 	};
 
+	const updateAccount = async (id: number, name: string, type: string, balance: number, opened: string): Promise<void> => {
+		try {
+			await invoke("update_account", { id: id, name: name, accountType: type, balance: balance, opened: opened });
+			toast.success('Account has been updated!')
+			getAccounts();
+		} catch (error) {
+			console.error("Error updating account:", error);
+		}
+	}
+
 	const deleteAccount = async (id: number): Promise<void> => {
 		try {
 			await invoke("delete_account", { id });
@@ -44,18 +57,8 @@ function Accounts() {
 		} catch (error) {
 			console.error("Error deleting account:", error);
 		}
-		toast.error('Account has been deleted.')
+		toast.error('Account is used in a transaction, unable to delete.');
 	};
-
-	const updateAccount = async (id: number, balance: number): Promise<void> => {
-		try {
-			await invoke("update_account", { id, balance });
-			toast.success('Account has been updated!')
-			getAccounts();
-		} catch (error) {
-			console.error("Error updating account:", error);
-		}
-	}
 
 	return (
 		<div className="flex justify-center min-h-screen w-screen">
@@ -76,25 +79,65 @@ function Accounts() {
 						<TableBody className="text-left">
 							{accounts.map((account: Account) => (
 								<TableRow key={account.id} className="mb-2">
-									<TableCell>{account.name}</TableCell>
-									<TableCell>{account.account_type}</TableCell>
-									<TableCell>{account.opened}</TableCell>
+									<TableCell>
+										<Input
+											type="text"
+											defaultValue={account.name}
+											onBlur={(e) => {
+												updateAccount(account.id, e.target.value, account.account_type, account.balance, account.opened);
+											}}
+											className="w-36"
+										/>
+									</TableCell>
+									<TableCell>
+										<Input
+											type="text"
+											defaultValue={account.account_type}
+											onBlur={(e) => {
+												updateAccount(account.id, account.name, e.target.value, account.balance, account.opened);
+											}}
+											className="w-36"
+										/>
+									</TableCell>
+									<TableCell>
+										<Popover>
+											<PopoverTrigger asChild>
+													<Button
+														variant={"outline"}
+														className="w-36"
+													>
+														{format(account.opened, "PP")}
+														<CalendarIcon className="ml-3 mb-0.5 h-4 w-4 opacity-50" />
+													</Button>
+											</PopoverTrigger>
+
+											<PopoverContent className="w-auto p-0" align="start">
+												<Calendar
+													mode="single"
+													selected={new Date(account.opened)}
+													onSelect={(e) => {
+														// @ts-ignore
+														updateAccount(account.id, account.name, account.account_type, account.balance, e.toISOString())
+													}}
+													disabled={(date) =>
+														date > new Date()
+													}
+													initialFocus
+												/>
+											</PopoverContent>
+										</Popover>
+									</TableCell>
 									<TableCell>
 										<Input
 											type="number"
 											step="0.01"
 											defaultValue={(account.balance / 100).toFixed(2)}
-											onChange={(e) => {
-												const value = e.target.value;
-												if (value.includes('.') && value.split('.')[1].length > 2) {
-													e.target.value = Number(value).toFixed(2);
-												}
-											}}
 											onBlur={(e) => {
 												const dollarValue = Number.parseFloat(e.target.value);
 												const centsValue = Math.round(dollarValue * 100);
-												updateAccount(account.id, centsValue);
+												updateAccount(account.id, account.name, account.account_type, centsValue, account.opened);
 											}}
+											className="w-36"
 										/>
 									</TableCell>
 									<TableCell className="flex gap-2">

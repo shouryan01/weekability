@@ -3,6 +3,26 @@ use sqlx::{Pool, Sqlite};
 use tauri::State;
 
 #[tauri::command]
+pub async fn create_category(
+    pool: State<'_, Pool<Sqlite>>,
+    name: String
+) -> Result<String, String> {
+    let result = sqlx::query!(
+        "INSERT INTO categories (name) VALUES ($1)",
+        name
+    )
+        .execute(pool.inner())
+        .await
+        .map_err(|err| err.to_string())?;
+
+    if result.rows_affected() == 1 {
+        Ok("Category successfully inserted".to_string())
+    } else {
+        Err("Failed to insert account".to_string())
+    }
+}
+
+#[tauri::command]
 pub async fn get_categories(pool: State<'_, Pool<Sqlite>>) -> Result<Vec<Category>, String> {
     let rows: Vec<Category> = sqlx::query_as!(Category, "SELECT * FROM categories ")
         .fetch_all(pool.inner())
@@ -12,22 +32,24 @@ pub async fn get_categories(pool: State<'_, Pool<Sqlite>>) -> Result<Vec<Categor
 }
 
 #[tauri::command]
-pub async fn create_category(
+pub async fn update_category(
     pool: State<'_, Pool<Sqlite>>,
-    name: String
+    id: i64,
+    name: String,
 ) -> Result<String, String> {
     let result = sqlx::query!(
-        "INSERT INTO categories (name) VALUES ($1)",
-        name
+        "UPDATE categories SET name = $1 WHERE id = $2",
+        name,
+        id
     )
-    .execute(pool.inner())
-    .await
-    .map_err(|err| err.to_string())?;
+        .execute(pool.inner())
+        .await
+        .map_err(|err| err.to_string())?;
 
     if result.rows_affected() == 1 {
-        Ok("Category successfully inserted".to_string())
+        Ok("Category successfully updated".to_string())
     } else {
-        Err("Failed to insert account".to_string())
+        Err("Failed to update category".to_string())
     }
 }
 

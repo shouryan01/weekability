@@ -32,17 +32,19 @@ pub fn run() {
         .plugin(tauri_plugin_sql::Builder::new().build())
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
-            db::accounts::get_accounts,
             db::accounts::create_account,
+            db::accounts::get_accounts,
             db::accounts::update_account,
             db::accounts::delete_account,
 
-            db::categories::get_categories,
             db::categories::create_category,
+            db::categories::get_categories,
+            db::categories::update_category,
             db::categories::delete_category,
 
-            db::transactions::get_transactions,
             db::transactions::create_transaction,
+            db::transactions::get_transactions,
+            db::transactions::update_transaction,
             db::transactions::delete_transaction
         ])
         .run(tauri::generate_context!())

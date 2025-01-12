@@ -7,6 +7,7 @@ import {Button} from "@/components/ui/button.tsx";
 import {Trash} from "lucide-react";
 import {toast} from "sonner";
 import {CategoryFormDialog} from "@/components/forms/category-form.tsx";
+import {Input} from "@/components/ui/input.tsx";
 
 export const Route = createFileRoute('/settings')({
   component: Settings,
@@ -28,6 +29,16 @@ function Settings() {
         }
     };
 
+    const updateCategory = async (id: number, name: string): Promise<void> => {
+        try {
+            await invoke("update_category", { id, name });
+            toast.success('Category has been updated!')
+            getCategories();
+        } catch (error) {
+            console.error("Error updating category", error);
+        }
+    };
+
     const deleteCategory = async (id: number): Promise<void> => {
         try {
             await invoke("delete_category", { id });
@@ -35,7 +46,7 @@ function Settings() {
         } catch (error) {
             console.error("Error deleting category", error);
         }
-        toast.error('Category has been deleted.')
+        toast.error('Category is used in a transaction, unable to delete.');
     };
 
   return (
@@ -53,7 +64,15 @@ function Settings() {
                 <TableBody className="text-left">
                     {categories.map((category: Category) => (
                         <TableRow key={category.id} className="mb-2">
-                            <TableCell>{category.name}</TableCell>
+                            <TableCell>
+                                <Input
+                                    type="text"
+                                    defaultValue={category.name}
+                                    onBlur={(e) => {
+                                        updateCategory(category.id, e.target.value);
+                                    }}
+                                />
+                            </TableCell>
 
                             <TableCell className="flex gap-2">
                                 <Button

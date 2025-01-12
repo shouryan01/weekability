@@ -116,7 +116,7 @@ export function AccountForm({ getAccounts, setOpen }: { getAccounts: () => Promi
                     selected={field.value}
                     onSelect={field.onChange}
                     disabled={(date) =>
-                      date > new Date() || date < new Date("2019-01-01")
+                      date > new Date()
                     }
                     initialFocus
                   />

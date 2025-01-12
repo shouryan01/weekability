@@ -37,17 +37,31 @@ pub async fn get_accounts(pool: State<'_, Pool<Sqlite>>) -> Result<Vec<Account>,
     Ok(rows)
 }
 
-// Update only needed for Account Balance
+#[tauri::command]
+pub async fn get_account_names(pool: State<'_, Pool<Sqlite>>) -> Result<Vec<String>, String> {
+    let rows: Vec<String> = sqlx::query_scalar!("SELECT name FROM accounts")
+        .fetch_all(pool.inner())
+        .await
+        .map_err(|err| err.to_string())?;
+    Ok(rows)
+}
+
 #[tauri::command]
 pub async fn update_account(
     pool: State<'_, Pool<Sqlite>>,
     id: i64,
+    name: String,
+    account_type: String,
     balance: i64,
+    opened: String,
 ) -> Result<String, String> {
     let result = sqlx::query!(
-        "UPDATE accounts SET balance = $1 WHERE id = $2",
+        "UPDATE accounts SET name = $2, account_type = $3, balance = $4, opened = $5 WHERE id = $1",
+        id,
+        name,
+        account_type,
         balance,
-        id
+        opened
     )
     .execute(pool.inner())
     .await
