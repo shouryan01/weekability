@@ -7,6 +7,8 @@
 		"core:default",
 		"shell:allow-open",
 		"sql:default",
-		"sql:allow-execute"
+		"sql:allow-execute",
+		"core:window:default",
+		"core:window:allow-start-dragging"
 	]
 }

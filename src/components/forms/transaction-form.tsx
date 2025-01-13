@@ -127,10 +127,7 @@ export function TransactionForm({ getCategories, setOpen }: { getCategories: () 
                     name="category_id"
                     render={({ field }) => (
                         <FormItem>
-                            {/* <FormControl>
-                                <Input placeholder="Category ID" type="number" {...field} />
-                            </FormControl> */}
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={field.onChange} defaultValue={field.value} >
                                 <FormControl>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select a category." />
@@ -176,7 +173,7 @@ export function TransactionForm({ getCategories, setOpen }: { getCategories: () 
                                 selected={field.value}
                                 onSelect={field.onChange}
                                 disabled={(date) =>
-                                date > new Date() || date < new Date("2019-01-01")
+                                date > new Date()
                                 }
                                 initialFocus
                             />

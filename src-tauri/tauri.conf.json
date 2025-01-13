@@ -13,11 +13,11 @@
 		"windows": [
 			{
 				"title": "weekability",
-				"width": 1200,
+				"width": 1250,
 				"height": 850,
-				"minWidth": 770,
-				"minHeight": 470,
-				"center": true
+				"center": true,
+				"hiddenTitle": true,
+				"titleBarStyle": "Overlay"
 			}
 		],
 		"security": {
