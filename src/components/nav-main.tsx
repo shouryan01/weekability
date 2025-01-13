@@ -7,6 +7,7 @@ import {
 
 import { Link } from "@tanstack/react-router"
 import type { LucideIcon } from "lucide-react"
+import { useLocation } from '@tanstack/react-router'
 
 export function NavMain({
   items,
@@ -22,19 +23,25 @@ export function NavMain({
     }[]
   }[]
 }) {
+  const location = useLocation().pathname
+
   return (
     <SidebarGroup>
       <SidebarMenu>
-        {items.map((item) => (
-          <SidebarMenuItem key={item.url}>
-            <SidebarMenuButton tooltip={item.title} asChild>
-              <Link href={item.url}>
-              {item.icon && <item.icon />}
-              <span>{item.title}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
+        {items.map((item) => {
+          const isActive = location == item.url;
+
+          return (
+              <SidebarMenuItem key={item.url}>
+                <SidebarMenuButton tooltip={item.title} asChild isActive={isActive}>
+                  <Link href={item.url} className="h-10 w-10">
+                    {item.icon && <item.icon/>}
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+          )
+        })}
       </SidebarMenu>
     </SidebarGroup>
   )
