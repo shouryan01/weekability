@@ -2,7 +2,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {useEffect, useState} from "react";
 
 import {Button} from "@/components/ui/button.tsx";
-import type {Account, Category, Transaction} from "@/lib/types.ts";
+import {Account, Category, Transaction} from "@/lib/types.ts";
 import {TransactionFormDialog} from "@/components/forms/transaction-form.tsx";
 import {CalendarIcon, Trash} from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
@@ -13,6 +13,7 @@ import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.t
 import {format} from "date-fns";
 import {Calendar} from "@/components/ui/calendar.tsx";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
+import ImportCSV from "@/components/csv-importer.tsx";
 
 export const Route = createFileRoute("/transactions")({
 	component: Transactions,
@@ -76,11 +77,17 @@ function Transactions() {
 		toast.error('Transaction has been deleted.')
 	};
 
+	const [isOpen, setIsOpen] = useState(false);
+
 	return (
 		<div className="flex justify-center min-h-screen w-screen">
 			<div>
 				<div className="flex flex-col items-center min-h-screen text-center mt-5">
 					<h1 className="text-3xl mb-8">Transactions</h1>
+					<Button onClick={() => {setIsOpen(!isOpen)}}>Open CSV Importer</Button>
+
+					<ImportCSV isOpen={isOpen} setIsOpen={setIsOpen} />
+
 					<Table>
 						<TableHeader>
 							<TableRow>
@@ -114,11 +121,12 @@ function Transactions() {
 												value={transaction.category_id.toString()}
 											>
 												<SelectTrigger className="w-36">
-													<SelectValue placeholder="Select a category." />
+													<SelectValue placeholder="Select a category."/>
 												</SelectTrigger>
 												<SelectContent>
 													{categories.map((category) =>
-														<SelectItem key={category.id} value={category.id.toString()}>{category.name}</SelectItem>
+														<SelectItem key={category.id}
+																	value={category.id.toString()}>{category.name}</SelectItem>
 													)}
 												</SelectContent>
 											</Select>
@@ -131,11 +139,12 @@ function Transactions() {
 												value={transaction.account_id.toString()}
 											>
 												<SelectTrigger className="w-36">
-													<SelectValue placeholder="Select an account." />
+													<SelectValue placeholder="Select an account."/>
 												</SelectTrigger>
 												<SelectContent>
 													{accounts.map((account) =>
-														<SelectItem key={account.id} value={account.id.toString()}>{account.name}</SelectItem>
+														<SelectItem key={account.id}
+																	value={account.id.toString()}>{account.name}</SelectItem>
 													)}
 												</SelectContent>
 											</Select>
