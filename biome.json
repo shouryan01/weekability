@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["node_modules", "src-tauri", "dist"]
+		"ignore": ["node_modules", "src-tauri", "dist", "src/routeTree.gen.ts"]
 	},
 	"formatter": {
 		"enabled": true,
