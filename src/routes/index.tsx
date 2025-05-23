@@ -1,5 +1,4 @@
 import "../App.css";
-
 import { ChartComponent } from "@/components/chart-test";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -12,7 +11,7 @@ function App() {
 		<div className="flex justify-center w-screen">
 			<ChartComponent />
 		</div>
-	)
+	);
 }
 
 export default App;

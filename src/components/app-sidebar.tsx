@@ -1,4 +1,6 @@
-import {ChartPie, Coins, Landmark, List, Moon, Rows4, Sun, UnfoldHorizontal} from "lucide-react";
+import { NavMain } from "@/components/nav-main";
+import { useTheme } from "@/components/theme-provider.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import {
 	Sidebar,
 	SidebarContent,
@@ -9,21 +11,27 @@ import {
 	SidebarMenuItem,
 	SidebarRail,
 	SidebarTrigger,
-	useSidebar
+	useSidebar,
 } from "@/components/ui/sidebar";
+import { Link } from "@tanstack/react-router";
+import {
+	ChartPie,
+	Coins,
+	Landmark,
+	List,
+	Moon,
+	Rows4,
+	Sun,
+	UnfoldHorizontal,
+} from "lucide-react";
+import type * as React from "react";
+import { ThemeToggle } from "./theme-toggle";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "./ui/tooltip";
-
-import { Link } from "@tanstack/react-router";
-import { NavMain } from "@/components/nav-main";
-import { ThemeToggle } from "./theme-toggle";
-import * as React from "react";
-import {Button} from "@/components/ui/button.tsx";
-import {useTheme} from "@/components/theme-provider.tsx";
 
 const data = [
 	{
@@ -55,11 +63,16 @@ const data = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { theme, setTheme } = useTheme();
-	const { toggleSidebar, open } = useSidebar()
+	const { toggleSidebar, open } = useSidebar();
 	const isOpen = open;
 
 	return (
-		<Sidebar variant="sidebar" collapsible="icon" {...props} className="pt-8 max-h-screen bg-sidebar">
+		<Sidebar
+			variant="sidebar"
+			collapsible="icon"
+			{...props}
+			className="pt-8 max-h-screen bg-sidebar"
+		>
 			<SidebarHeader className="mx-2.5">
 				<SidebarMenu>
 					<SidebarMenuItem>
@@ -98,12 +111,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					<SidebarMenu>
 						<SidebarMenuItem>
 							<SidebarMenuButton asChild>
-								<Button variant="outline"
-										onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
-									<Sun
-										className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 hover:rotate-45 transition-all duration-150 dark:-rotate-90 dark:scale-0" />
-									<Moon
-										className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 hover:rotate-45 transition-all duration-150 dark:rotate-0 dark:scale-100"/>
+								<Button
+									variant="outline"
+									onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+								>
+									<Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 hover:rotate-45 transition-all duration-150 dark:-rotate-90 dark:scale-0" />
+									<Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 hover:rotate-45 transition-all duration-150 dark:rotate-0 dark:scale-100" />
 								</Button>
 							</SidebarMenuButton>
 						</SidebarMenuItem>
@@ -115,7 +128,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 						<SidebarMenuItem>
 							<SidebarMenuButton asChild>
 								<Button variant="outline" onClick={toggleSidebar}>
-									<UnfoldHorizontal className="h-[1.2rem] w-[1.2rem] transition-all duration-150"/>
+									<UnfoldHorizontal className="h-[1.2rem] w-[1.2rem] transition-all duration-150" />
 								</Button>
 							</SidebarMenuButton>
 						</SidebarMenuItem>
@@ -125,10 +138,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				{!isOpen && (
 					<TooltipProvider>
 						<div className="flex flex-col gap-1">
-							<ThemeToggle/>
+							<ThemeToggle />
 							<Tooltip>
 								<TooltipTrigger asChild>
-									<SidebarTrigger/>
+									<SidebarTrigger />
 								</TooltipTrigger>
 								<TooltipContent side="right">Resize Sidebar</TooltipContent>
 							</Tooltip>

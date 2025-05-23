@@ -1,3 +1,12 @@
+import { AccountFormDialog } from "@/components/forms/account-form";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar.tsx";
+import { Input } from "@/components/ui/input";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover.tsx";
 import {
 	Table,
 	TableBody,
@@ -6,19 +15,13 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { useEffect, useState } from "react";
-
 import type { Account } from "@/lib/types";
-import { AccountFormDialog } from "@/components/forms/account-form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {CalendarIcon, Trash} from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { invoke } from "@tauri-apps/api/core";
+import { format } from "date-fns";
+import { CalendarIcon, Trash } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import {Calendar} from "@/components/ui/calendar.tsx";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
-import {format} from "date-fns";
 
 export const Route = createFileRoute("/accounts")({
 	component: Accounts,
@@ -40,15 +43,27 @@ function Accounts() {
 		}
 	};
 
-	const updateAccount = async (id: number, name: string, type: string, balance: number, opened: string): Promise<void> => {
+	const updateAccount = async (
+		id: number,
+		name: string,
+		type: string,
+		balance: number,
+		opened: string,
+	): Promise<void> => {
 		try {
-			await invoke("update_account", { id: id, name: name, accountType: type, balance: balance, opened: opened });
-			toast.success('Account has been updated!')
+			await invoke("update_account", {
+				id: id,
+				name: name,
+				accountType: type,
+				balance: balance,
+				opened: opened,
+			});
+			toast.success("Account has been updated!");
 			getAccounts();
 		} catch (error) {
 			console.error("Error updating account:", error);
 		}
-	}
+	};
 
 	const deleteAccount = async (id: number): Promise<void> => {
 		try {
@@ -57,7 +72,7 @@ function Accounts() {
 		} catch (error) {
 			console.error("Error deleting account:", error);
 		}
-		toast.error('Account is used in a transaction, unable to delete.');
+		toast.error("Account is used in a transaction, unable to delete.");
 	};
 
 	return (
@@ -84,7 +99,13 @@ function Accounts() {
 											type="text"
 											defaultValue={account.name}
 											onBlur={(e) => {
-												updateAccount(account.id, e.target.value, account.account_type, account.balance, account.opened);
+												updateAccount(
+													account.id,
+													e.target.value,
+													account.account_type,
+													account.balance,
+													account.opened,
+												);
 											}}
 											className="w-36"
 										/>
@@ -94,7 +115,13 @@ function Accounts() {
 											type="text"
 											defaultValue={account.account_type}
 											onBlur={(e) => {
-												updateAccount(account.id, account.name, e.target.value, account.balance, account.opened);
+												updateAccount(
+													account.id,
+													account.name,
+													e.target.value,
+													account.balance,
+													account.opened,
+												);
 											}}
 											className="w-36"
 										/>
@@ -102,13 +129,10 @@ function Accounts() {
 									<TableCell>
 										<Popover>
 											<PopoverTrigger asChild>
-													<Button
-														variant={"outline"}
-														className="w-36"
-													>
-														{format(account.opened, "PP")}
-														<CalendarIcon className="ml-3 mb-0.5 h-4 w-4 opacity-50" />
-													</Button>
+												<Button variant={"outline"} className="w-36">
+													{format(account.opened, "PP")}
+													<CalendarIcon className="ml-3 mb-0.5 h-4 w-4 opacity-50" />
+												</Button>
 											</PopoverTrigger>
 
 											<PopoverContent className="w-auto p-0" align="start">
@@ -117,11 +141,15 @@ function Accounts() {
 													selected={new Date(account.opened)}
 													onSelect={(e) => {
 														// @ts-ignore
-														updateAccount(account.id, account.name, account.account_type, account.balance, e.toISOString())
+														updateAccount(
+															account.id,
+															account.name,
+															account.account_type,
+															account.balance,
+															e.toISOString(),
+														);
 													}}
-													disabled={(date) =>
-														date > new Date()
-													}
+													disabled={(date) => date > new Date()}
 													initialFocus
 												/>
 											</PopoverContent>
@@ -135,7 +163,13 @@ function Accounts() {
 											onBlur={(e) => {
 												const dollarValue = Number.parseFloat(e.target.value);
 												const centsValue = Math.round(dollarValue * 100);
-												updateAccount(account.id, account.name, account.account_type, centsValue, account.opened);
+												updateAccount(
+													account.id,
+													account.name,
+													account.account_type,
+													centsValue,
+													account.opened,
+												);
 											}}
 											className="w-36"
 										/>

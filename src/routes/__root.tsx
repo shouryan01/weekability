@@ -1,7 +1,6 @@
+import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet, createRootRoute } from "@tanstack/react-router";
-
-import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "sonner";
 
 export const Route = createRootRoute({

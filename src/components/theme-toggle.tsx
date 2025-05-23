@@ -1,12 +1,11 @@
-import { Moon, Sun } from "lucide-react";
+import { useTheme } from "@/components/theme-provider";
+import { Button } from "@/components/ui/button";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
-} from "@/components/ui/tooltip"
-
-import { Button } from "@/components/ui/button";
-import { useTheme } from "@/components/theme-provider";
+} from "@/components/ui/tooltip";
+import { Moon, Sun } from "lucide-react";
 
 export function ThemeToggle() {
 	const { theme, setTheme } = useTheme();
@@ -24,9 +23,7 @@ export function ThemeToggle() {
 					<Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 hover:rotate-45 transition-all duration-150 dark:rotate-0 dark:scale-100" />
 				</Button>
 			</TooltipTrigger>
-			<TooltipContent side="right">
-				Toggle Theme
-			</TooltipContent>
+			<TooltipContent side="right">Toggle Theme</TooltipContent>
 		</Tooltip>
 	);
 }
