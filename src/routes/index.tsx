@@ -1,4 +1,3 @@
-import "../App.css";
 import { ChartComponent } from "@/components/chart-test";
 import { createFileRoute } from "@tanstack/react-router";
 
