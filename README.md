@@ -3,7 +3,7 @@
 100% Offline Personal Finance Tracker
 
 No internet, no servers, no tracking, no subscriptions No bullshit. 
-Basically a turbo-charged spreadsheet!
+Basically just a spreadsheet with some extra goodies!
 
 ## Weekability Manifesto
 
