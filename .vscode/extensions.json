@@ -4,7 +4,6 @@
 		"rust-lang.rust-analyzer",
 		"bradlc.vscode-tailwindcss",
 		"biomejs.biome",
-		"amatiasq.sort-imports",
 		"formulahendry.auto-rename-tag",
 		"vincaslt.highlight-matching-tag",
 		"yoavbls.pretty-ts-errors"
