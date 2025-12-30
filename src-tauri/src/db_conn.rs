@@ -39,6 +39,9 @@ impl Database {
         // SQLx will track which migrations have been run
         sqlx::migrate!("./migrations").run(&pool).await?;
 
+        // Seed default categories if none exist
+        crate::db::categories::seed_categories(&pool).await?;
+
         Ok(Self { pool })
     }
 }

@@ -61,3 +61,31 @@ pub async fn delete_category(pool: State<'_, Pool<Sqlite>>, id: i64) -> Result<S
         .map_err(|err| err.to_string ())?;
     Ok("Category successfully deleted".to_string())
 }
+
+pub async fn seed_categories(pool: &Pool<Sqlite>) -> Result<(), sqlx::Error> {
+    let count: (i32,) = sqlx::query_as("SELECT COUNT(*) FROM categories")
+        .fetch_one(pool)
+        .await?;
+
+    if count.0 == 0 {
+        let categories = vec![
+            "Groceries",
+            "Dining",
+            "Transport",
+            "Housing",
+            "Amazon",
+            "Entertainment",
+            "Shopping",
+            "Misc",
+        ];
+
+        for category in categories {
+            sqlx::query("INSERT INTO categories (name) VALUES (?)")
+                .bind(category)
+                .execute(pool)
+                .await?;
+        }
+    }
+
+    Ok(())
+}
