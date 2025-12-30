@@ -125,7 +125,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							</SidebarMenuItem>
 						</SidebarMenu>
 
-						<SidebarMenu>
+						{/* <SidebarMenu>
 							<SidebarMenuItem>
 								<SidebarMenuButton asChild>
 									<Button variant="outline" onClick={toggleSidebar}>
@@ -133,7 +133,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 									</Button>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
-						</SidebarMenu>
+						</SidebarMenu> */}
 					</div>
 				)}
 
@@ -141,12 +141,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					<TooltipProvider>
 						<div className="flex flex-col gap-1">
 							<ThemeToggle />
-							<Tooltip>
+							{/* <Tooltip>
 								<TooltipTrigger asChild>
 									<SidebarTrigger />
 								</TooltipTrigger>
 								<TooltipContent side="right">Resize Sidebar</TooltipContent>
-							</Tooltip>
+							</Tooltip> */}
 						</div>
 					</TooltipProvider>
 				)}

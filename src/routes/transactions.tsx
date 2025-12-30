@@ -119,7 +119,7 @@ function Transactions() {
 							setIsOpen(!isOpen);
 						}}
 					>
-						Open CSV Importer
+						Import
 					</Button>
 
 					<ImportCSV isOpen={isOpen} setIsOpen={setIsOpen} />
